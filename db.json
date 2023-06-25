@@ -1,0 +1,9 @@
+{
+    "notes": [
+        {
+            "id": "wow",
+            "content": "this is the content of my note",
+            "important": false
+        }
+    ]
+}
