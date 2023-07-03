@@ -1,22 +1,3 @@
 {
-    "notes": [
-        {
-            "id": 1,
-            "title": "Test Note",
-            "content": "this is the content of my note",
-            "important": false
-        },
-        {
-            "id": 2,
-            "title": "Best Book?",
-            "content": "Mistborn is the best book ever",
-            "important": true
-        },
-        {
-            "id": 3,
-            "title": "Secret Note",
-            "content": "There is no secret note.",
-            "important": false
-        }
-    ]
+  "notes": []
 }
