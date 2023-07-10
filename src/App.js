@@ -2,20 +2,52 @@ import './App.css';
 import axios from 'axios';
 import Icon from '@mdi/react';
 import Swal from 'sweetalert2';
-import { mdiClose, mdiFountainPen, mdiFountainPenTip, mdiTrashCan, mdiViewList } from '@mdi/js';
+import {
+  mdiClose,
+  mdiFountainPen,
+  mdiFountainPenTip,
+  mdiTrashCan,
+  mdiViewList,
+  mdiPlus
+} from '@mdi/js';
 import { useState, useEffect } from 'react';
 import withReactContent from 'sweetalert2-react-content';
+
+const _generateId = () => {
+  let timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+  return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (
+    Math.random() * 16 | 0).toString(16)).toLowerCase();
+}
 
 function App() {
 
   const reactSwal = withReactContent(Swal)
-
   const [isOffcanvasVisible, setIsOffcanvasVisible] = useState(false)
   const [activeNote, setActiveNote] = useState(null)
   const [activeNoteContent, setActiveNoteContent] = useState(null)
   const [notesList, setNotesList] = useState([])
   const [isNotesListLoading, setNotesListLoading] = useState(true)
+  const [newNoteTitle, setNewNoteTitle] = useState("")
 
+  const submitNewNote = (event) => {
+    event.preventDefault()
+    axios.post('http://localhost:3001/notes', { title: newNoteTitle, content: "Jot down your thoughts!" })
+      .then(res => {
+        setActiveNote(res.data)
+        setActiveNoteContent(res.data.content)
+        handleCloseOffcanvas()
+        setNewNoteTitle("")
+        reactSwal.fire({
+          title: <p className='text-xl'>🛠 Note Created</p>,
+          toast: true,
+          timerProgressBar: true,
+          position: 'bottom-end',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      })
+      .catch(error => console.log(error))
+  }
 
   const handleCloseOffcanvas = () => {
     if (isOffcanvasVisible)
@@ -34,10 +66,15 @@ function App() {
     })
     setActiveNote(foundNote)
     setActiveNoteContent(foundNote.content)
+    handleCloseOffcanvas()
   }
 
   const handleEditActiveNote = (event) => {
     setActiveNoteContent(event.target.value)
+  }
+
+  const handleEditNewNoteTitle = (event) => {
+    setNewNoteTitle(event.target.value)
   }
 
   useEffect(() => {
@@ -78,6 +115,9 @@ function App() {
           notesList={notesList}
           isLoading={isNotesListLoading}
           selectActiveNote={selectActiveNote}
+          newNoteTitle={newNoteTitle}
+          handleEditNewNoteTitle={handleEditNewNoteTitle}
+          submitNewNote={submitNewNote}
         />
 
         {activeNote ?
@@ -92,7 +132,14 @@ function App() {
   );
 }
 
-const NoteOffCanvas = ({ isOffcanvasVisible, handleCloseOffcanvas, notesList, selectActiveNote, isLoading }) => {
+const NoteOffCanvas = ({ isOffcanvasVisible,
+  handleCloseOffcanvas,
+  notesList,
+  selectActiveNote,
+  isLoading,
+  newNoteTitle,
+  submitNewNote,
+  handleEditNewNoteTitle }) => {
   let computedNotes = <></>
 
   if (isLoading)
@@ -115,16 +162,23 @@ const NoteOffCanvas = ({ isOffcanvasVisible, handleCloseOffcanvas, notesList, se
 
   return (
     <>
-      <div className={`absolute top-0 right-full w-1/4 h-full z-50 overflow-x-hidden p-3 ${isOffcanvasVisible ? 'translate-x-full' : ''} rounded-md shadow-2xl shadow-black bg-slate-700 text-zinc-100 transition-all duration-300 ease-in-out`}>
+      <div className={`absolute flex flex-col top-0 right-full w-1/4 h-full z-50 overflow-x-hidden p-3 ${isOffcanvasVisible ? 'translate-x-full' : ''} rounded-md shadow-2xl shadow-black bg-slate-700 text-zinc-100 transition-all duration-300 ease-in-out`}>
         <div className='flex justify-between text-xl'>
           <h3>Notes: {notesList.length}</h3>
           <button className='hover:text-red-900 transition-colors' onClick={handleCloseOffcanvas}>
             <Icon path={mdiClose} size={1.5} />
           </button>
         </div>
-        <ul className='text-3xl'>
+        <ul className='text-3xl flex-1'>
           {computedNotes}
         </ul>
+        <form onSubmit={submitNewNote} className='w-full'>
+          <div className='flex items-center h-8'>
+            <input value={newNoteTitle} onChange={handleEditNewNoteTitle} minLength={3} maxLength={15} className='rounded-md bg-slate-400 p-3 flex-1 h-full' type="text" />
+            <input className='rounded-md h-full mx-2' type="color" />
+            <button className='rounded-md bg-green-800 h-full hover:bg-green-600 transition-all duration-200'><Icon path={mdiPlus} size={1.25} /></button>
+          </div>
+        </form>
       </div>
     </>
   )
