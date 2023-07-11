@@ -28,10 +28,11 @@ function App() {
   const [notesList, setNotesList] = useState([])
   const [isNotesListLoading, setNotesListLoading] = useState(true)
   const [newNoteTitle, setNewNoteTitle] = useState("")
+  const [newNoteColor, setNewNoteColor] = useState("#f4f4f5")
 
   const submitNewNote = (event) => {
     event.preventDefault()
-    axios.post('http://localhost:3001/notes', { title: newNoteTitle, content: "Jot down your thoughts!" })
+    axios.post('http://localhost:3001/notes', { title: newNoteTitle, content: "Jot down your thoughts!", color: newNoteColor })
       .then(res => {
         setActiveNote(res.data)
         setActiveNoteContent(res.data.content)
@@ -118,6 +119,8 @@ function App() {
           newNoteTitle={newNoteTitle}
           handleEditNewNoteTitle={handleEditNewNoteTitle}
           submitNewNote={submitNewNote}
+          newNoteColor={newNoteColor}
+          setNewNoteColor={setNewNoteColor}
         />
 
         {activeNote ?
@@ -139,7 +142,9 @@ const NoteOffCanvas = ({ isOffcanvasVisible,
   isLoading,
   newNoteTitle,
   submitNewNote,
-  handleEditNewNoteTitle }) => {
+  handleEditNewNoteTitle,
+  newNoteColor,
+  setNewNoteColor }) => {
   let computedNotes = <></>
 
   if (isLoading)
@@ -154,9 +159,12 @@ const NoteOffCanvas = ({ isOffcanvasVisible,
     </>
   else {
     computedNotes = notesList.map(note => {
-      return <li className='mt-2 p-2 rounded-md transition-all ease-in-out duration-150 bg-slate-700 hover:bg-slate-500 hover:cursor-pointer'
+      return <li className='flex items-center mt-2 p-2 rounded-md transition-all ease-in-out duration-150 bg-slate-700 hover:bg-slate-500 hover:cursor-pointer'
         onClick={() => selectActiveNote(note.id)}
-        key={note.id}>{note.title}</li>
+        key={note.id}>
+        <div className='w-6 h-6 rounded-full me-2' style={{ backgroundColor: `${note.color}` }}></div>
+        <p className='pb-2'>{note.title}</p>
+      </li>
     })
   }
 
@@ -175,7 +183,7 @@ const NoteOffCanvas = ({ isOffcanvasVisible,
         <form onSubmit={submitNewNote} className='w-full'>
           <div className='flex items-center h-8'>
             <input value={newNoteTitle} onChange={handleEditNewNoteTitle} minLength={3} maxLength={15} className='rounded-md bg-slate-400 p-3 flex-1 h-full' type="text" />
-            <input className='rounded-md h-full mx-2' type="color" />
+            <input value={newNoteColor} onChange={(event) => setNewNoteColor(event.target.value)} className='rounded-md h-full mx-2' type="color" />
             <button className='rounded-md bg-green-800 h-full hover:bg-green-600 transition-all duration-200'><Icon path={mdiPlus} size={1.25} /></button>
           </div>
         </form>
@@ -214,24 +222,29 @@ const ActiveNote = ({ activeNote, activeNoteContent, handleEditActiveNote, setAc
       confirmButtonText: "Delete Note"
     }).then((result) => {
       if (result.isConfirmed) {
-        reactSwal.fire({
-          title: <p className='text-xl'>👋 Note has been deleted!</p>,
-          toast: true,
-          timerProgressBar: true,
-          position: 'bottom-end',
-          showConfirmButton: false,
-          timer: 2000
-        })
         axios.delete(`http://localhost:3001/notes/${activeNote.id}`)
-        setActiveNote(null)
+          .then(() => {
+            reactSwal.fire({
+              title: <p className='text-xl'>👋 Note has been deleted!</p>,
+              toast: true,
+              timerProgressBar: true,
+              position: 'bottom-end',
+              showConfirmButton: false,
+              timer: 2000
+            })
+            setActiveNote(null)
+          })
       }
     })
   }
 
   return (
     <div className='flex bg-slate-800 border-4 rounded-2xl px-16 py-10 border-slate-600 py h-[40rem] w-4/5 m-auto mt-24'>
-      <div className='w-1/4'>
-        <h2 className=' text-white text-4xl'>{activeNote.title}</h2>
+      <div className='w-1/4 flex items-start'>
+        <div className='flex w-full items-center'>
+          <div className='h-8 w-1/12 rounded-full me-2' style={{ backgroundColor: `${activeNote.color}` }}></div>
+          <h2 className=' text-white text-3xl'>{activeNote.title}</h2>
+        </div>
       </div>
       <textarea className='p-3 w-1/2 flex h-4/5 rounded-lg self-center resize-none text-black bg-gray-200'
         value={activeNoteContent}

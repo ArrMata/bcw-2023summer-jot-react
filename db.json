@@ -1,19 +1,22 @@
 {
   "notes": [
     {
-      "id": 1,
-      "content": "This is the content of my note, am adding more content to my note\n",
-      "title": "Note Title"
+      "title": "testing note",
+      "content": "Jot down your thoughts!",
+      "color": "#c10000",
+      "id": 1
     },
     {
-      "title": "JS Notes",
+      "title": "new note!",
       "content": "Jot down your thoughts!",
-      "id": 4
+      "color": "#2fe0ff",
+      "id": 2
     },
     {
-      "title": "Book Notes",
+      "title": "new note?",
       "content": "Jot down your thoughts!",
-      "id": 5
+      "color": "#f4f4f5",
+      "id": 3
     }
   ]
 }
