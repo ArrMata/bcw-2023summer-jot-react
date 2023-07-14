@@ -73,7 +73,7 @@ function App() {
 
   useEffect(() => {
     setNotesListLoading(true)
-    axios.get('http://localhost:3001/notes')
+    axios.get('http://localhost:3001/api/notes')
       .then(res => {
         setNotesList(res.data)
         setNotesListLoading(false)
