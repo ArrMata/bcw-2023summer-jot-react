@@ -25,7 +25,7 @@ function App() {
 
   const submitNewNote = (event) => {
     event.preventDefault()
-    axios.post('/notes', { title: newNoteTitle, content: "Jot down your thoughts!", color: newNoteColor })
+    axios.post('/api/notes', { title: newNoteTitle, content: "Jot down your thoughts!", color: newNoteColor })
       .then(res => {
         setActiveNote(res.data)
         setActiveNoteContent(res.data.content)

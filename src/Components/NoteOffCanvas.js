@@ -11,6 +11,7 @@ export const NoteOffCanvas = ({ isOffcanvasVisible,
     handleEditNewNoteTitle,
     newNoteColor,
     setNewNoteColor }) => {
+
     let computedNotes = <></>
 
     if (isLoading)
