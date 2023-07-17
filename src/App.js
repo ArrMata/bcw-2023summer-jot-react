@@ -25,7 +25,7 @@ function App() {
 
   const submitNewNote = (event) => {
     event.preventDefault()
-    axios.post('http://localhost:3001/notes', { title: newNoteTitle, content: "Jot down your thoughts!", color: newNoteColor })
+    axios.post('/api/notes', { title: newNoteTitle, content: "Jot down your thoughts!", color: newNoteColor })
       .then(res => {
         setActiveNote(res.data)
         setActiveNoteContent(res.data.content)
@@ -73,7 +73,7 @@ function App() {
 
   useEffect(() => {
     setNotesListLoading(true)
-    axios.get('http://localhost:3001/api/notes')
+    axios.get('/api/notes')
       .then(res => {
         setNotesList(res.data)
         setNotesListLoading(false)
