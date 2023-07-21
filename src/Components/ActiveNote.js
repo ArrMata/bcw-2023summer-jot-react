@@ -9,7 +9,7 @@ export const ActiveNote = ({ activeNote, activeNoteContent, handleEditActiveNote
     const reactSwal = withReactContent(Swal)
 
     const saveNote = () => {
-        axios.patch(`http://localhost:3001/notes/${activeNote.id}`, { content: activeNoteContent })
+        axios.patch(`api/notes/${activeNote.id}`, { content: activeNoteContent })
             .then(() => {
                 reactSwal.fire({
                     title: <p className='text-xl'>💾 Note has been saved!</p>,
@@ -34,7 +34,7 @@ export const ActiveNote = ({ activeNote, activeNoteContent, handleEditActiveNote
             confirmButtonText: "Delete Note"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:3001/notes/${activeNote.id}`)
+                axios.delete(`api/notes/${activeNote.id}`)
                     .then(() => {
                         reactSwal.fire({
                             title: <p className='text-xl'>👋 Note has been deleted!</p>,
