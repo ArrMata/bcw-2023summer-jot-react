@@ -9,7 +9,7 @@ export const ActiveNote = ({ activeNote, activeNoteContent, handleEditActiveNote
     const reactSwal = withReactContent(Swal)
 
     const saveNote = () => {
-        axios.patch(`api/notes/${activeNote.id}`, { content: activeNoteContent })
+        axios.put(`api/notes/${activeNote.id}`, { content: activeNoteContent })
             .then(() => {
                 reactSwal.fire({
                     title: <p className='text-xl'>💾 Note has been saved!</p>,
