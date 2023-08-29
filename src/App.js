@@ -11,17 +11,19 @@ import withReactContent from 'sweetalert2-react-content';
 import { ActiveNote } from './Components/ActiveNote';
 import { NoteOffCanvas } from './Components/NoteOffCanvas';
 import { ActiveNotePlaceholder } from './Components/ActiveNotePlaceholder';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function App() {
 
-  const reactSwal = withReactContent(Swal)
-  const [isOffcanvasVisible, setIsOffcanvasVisible] = useState(false)
-  const [activeNote, setActiveNote] = useState(null)
-  const [activeNoteContent, setActiveNoteContent] = useState(null)
-  const [notesList, setNotesList] = useState([])
-  const [isNotesListLoading, setNotesListLoading] = useState(true)
-  const [newNoteTitle, setNewNoteTitle] = useState("")
-  const [newNoteColor, setNewNoteColor] = useState("#f4f4f5")
+  const { loginWithPopup, logout } = useAuth0();
+  const reactSwal = withReactContent(Swal);
+  const [isOffcanvasVisible, setIsOffcanvasVisible] = useState(false);
+  const [activeNote, setActiveNote] = useState(null);
+  const [activeNoteContent, setActiveNoteContent] = useState(null);
+  const [notesList, setNotesList] = useState([]);
+  const [isNotesListLoading, setNotesListLoading] = useState(true);
+  const [newNoteTitle, setNewNoteTitle] = useState("");
+  const [newNoteColor, setNewNoteColor] = useState("#f4f4f5");
 
   const submitNewNote = (event) => {
     event.preventDefault()
@@ -93,13 +95,21 @@ function App() {
             size={2} />
           <h1 className='text-zinc-100 text-3xl'>Take Note</h1>
         </div>
-        <button
-          onClick={() => setIsOffcanvasVisible(!isOffcanvasVisible)}>
-          <Icon className='p-2 rounded bg-slate-500 text-zinc-100 hover:bg-slate-400 transition-all ease-linear'
-            path={mdiViewList}
-            size={2}
-          />
-        </button>
+        <div className='flex'>
+          <button onClick={() => loginWithPopup()} className='bg-blue-600 text-white px-6 py-2 text-xl rounded me-4'>
+            Login
+          </button>
+          <button onClick={() => logout()} className='bg-red-600 text-white px-6 py-2 text-xl rounded me-4'>
+            Logout
+          </button>
+          <button
+            onClick={() => setIsOffcanvasVisible(!isOffcanvasVisible)}>
+            <Icon className='p-2 rounded bg-slate-500 text-zinc-100 hover:bg-slate-400 transition-all ease-linear'
+              path={mdiViewList}
+              size={2}
+            />
+          </button>
+        </div>
       </header>
 
       <main>

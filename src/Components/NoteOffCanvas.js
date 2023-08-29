@@ -1,5 +1,6 @@
 import Icon from "@mdi/react"
 import { mdiClose, mdiPlus } from "@mdi/js"
+import { useAuth0 } from "@auth0/auth0-react"
 
 export const NoteOffCanvas = ({ isOffcanvasVisible,
     handleCloseOffcanvas,
@@ -12,17 +13,19 @@ export const NoteOffCanvas = ({ isOffcanvasVisible,
     newNoteColor,
     setNewNoteColor }) => {
     let computedNotes = <></>
+    const authLoading = useAuth0().isLoading;
 
     if (isLoading)
-        computedNotes = <>
-            <li className='animate-pulse w-full h-7 bg-slate-500 mt-2 pt-2 rounded-md'></li>
-            <li className='animate-pulse w-full h-7 bg-slate-500 mt-2 pt-2 rounded-md'></li>
-            <li className='flex animate-pulse justify-center w-full h-4 mt-2'>
-                <div className='w-4 h-full bg-slate-500 rounded-full'></div>
-                <div className='w-4 h-full mx-2 bg-slate-500 rounded-full'></div>
-                <div className='w-4 h-full bg-slate-500 rounded-full'></div>
-            </li>
-        </>
+        computedNotes =
+            <>
+                <li className='animate-pulse w-full h-7 bg-slate-500 mt-2 pt-2 rounded-md'></li>
+                <li className='animate-pulse w-full h-7 bg-slate-500 mt-2 pt-2 rounded-md'></li>
+                <li className='flex animate-pulse justify-center w-full h-4 mt-2'>
+                    <div className='w-4 h-full bg-slate-500 rounded-full'></div>
+                    <div className='w-4 h-full mx-2 bg-slate-500 rounded-full'></div>
+                    <div className='w-4 h-full bg-slate-500 rounded-full'></div>
+                </li>
+            </>
     else {
         computedNotes = notesList.map(note => {
             return <li className='flex items-center mt-2 p-2 rounded-md transition-all ease-in-out duration-150 bg-slate-700 hover:bg-slate-500 hover:cursor-pointer'
