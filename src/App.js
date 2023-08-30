@@ -12,6 +12,9 @@ import { ActiveNote } from './Components/ActiveNote';
 import { NoteOffCanvas } from './Components/NoteOffCanvas';
 import { ActiveNotePlaceholder } from './Components/ActiveNotePlaceholder';
 import { useAuth0 } from '@auth0/auth0-react';
+import { notesService } from './Services/NotesService';
+import { useSelector } from 'react-redux';
+import { selectNotes } from './Redux/Slices/NotesSlice';
 
 function App() {
 
@@ -20,7 +23,8 @@ function App() {
   const [isOffcanvasVisible, setIsOffcanvasVisible] = useState(false);
   const [activeNote, setActiveNote] = useState(null);
   const [activeNoteContent, setActiveNoteContent] = useState(null);
-  const [notesList, setNotesList] = useState([]);
+  // const [notesList, setNotesList] = useState([]);
+  const notesList = useSelector(selectNotes);
   const [isNotesListLoading, setNotesListLoading] = useState(true);
   const [newNoteTitle, setNewNoteTitle] = useState("");
   const [newNoteColor, setNewNoteColor] = useState("#f4f4f5");
@@ -74,17 +78,28 @@ function App() {
   }
 
   useEffect(() => {
-    setNotesListLoading(true)
-    axios.get('/api/notes')
-      .then(res => {
-        setNotesList(res.data)
-        setNotesListLoading(false)
+    async function getAllNotes() {
+      setNotesListLoading(true);
+      await notesService.getAllNotes();
+      setNotesListLoading(false);
+    }
+
+    getAllNotes()
+      .catch((err) => {
+        console.error(err);
       })
-      .catch(err => {
-        console.error(err)
-        setNotesListLoading(false)
-      })
-  }, [activeNote])
+    // setNotesListLoading(true)
+    // axios.get('/api/notes')
+    //   .then(res => {
+    //     setNotesList(res.data)
+    //     setNotesListLoading(false)
+    //   })
+    //   .catch(err => {
+    //     console.error(err)
+    //     setNotesListLoading(false)
+    //   })
+    // setNotesListLoading(false);
+  }, [])
 
   return (
     <>

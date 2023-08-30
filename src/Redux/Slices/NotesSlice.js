@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const notesSlice = createSlice({
+const notesSlice = createSlice({
 	name: 'notes',
 	initialState: {
 		notes: [],
@@ -23,5 +23,7 @@ export const notesSlice = createSlice({
 });
 
 export const { populateAccountNotes } = notesSlice.actions;
+
+export const selectNotes = state => state.notes.notes;
 
 export default notesSlice.reducer;

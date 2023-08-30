@@ -1,6 +1,6 @@
 import Icon from "@mdi/react"
 import { mdiClose, mdiPlus } from "@mdi/js"
-import { useAuth0 } from "@auth0/auth0-react"
+// import { useAuth0 } from "@auth0/auth0-react"
 
 export const NoteOffCanvas = ({ isOffcanvasVisible,
     handleCloseOffcanvas,
@@ -13,7 +13,7 @@ export const NoteOffCanvas = ({ isOffcanvasVisible,
     newNoteColor,
     setNewNoteColor }) => {
     let computedNotes = <></>
-    const authLoading = useAuth0().isLoading;
+    // const authLoading = useAuth0().isLoading;
 
     if (isLoading)
         computedNotes =
