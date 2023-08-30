@@ -14,8 +14,10 @@ root.render(
       domain="dev-p7vx5zxzsmz52nqh.us.auth0.com"
       clientId="VFwlL64g216gZmlQrvCN4KMf1tZPs30M"
       authorizationParams={{
+        audience: "testingapi.nubby",
         redirect_uri: window.location.origin
       }}
+      cacheLocation='memory'
     >
       <Provider store={AppState}>
         <App />

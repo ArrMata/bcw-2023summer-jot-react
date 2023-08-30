@@ -22,7 +22,7 @@ const notesSlice = createSlice({
 	}
 });
 
-export const { populateAccountNotes } = notesSlice.actions;
+export const { populateAccountNotes, addNote, removeNote, selectActiveNote } = notesSlice.actions;
 
 export const selectNotes = state => state.notes.notes;
 

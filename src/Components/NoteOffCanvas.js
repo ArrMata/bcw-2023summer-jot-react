@@ -1,19 +1,55 @@
 import Icon from "@mdi/react"
 import { mdiClose, mdiPlus } from "@mdi/js"
+import { useState } from "react";
+import { notesService } from "../Services/NotesService";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectNotes } from "../Redux/Slices/NotesSlice";
+import { useAuth0 } from "@auth0/auth0-react";
 // import { useAuth0 } from "@auth0/auth0-react"
 
 export const NoteOffCanvas = ({ isOffcanvasVisible,
     handleCloseOffcanvas,
-    notesList,
     selectActiveNote,
-    isLoading,
-    newNoteTitle,
-    submitNewNote,
-    handleEditNewNoteTitle,
-    newNoteColor,
-    setNewNoteColor }) => {
-    let computedNotes = <></>
-    // const authLoading = useAuth0().isLoading;
+}) => {
+    function handleNewNoteTitle(e) {
+        setNewNote({ ...newNote, title: e.target.value });
+    }
+    function handleNewNoteColor(e) {
+        setNewNote({ ...newNote, color: e.target.value });
+    }
+    async function createNote(e) {
+        try {
+            e.preventDefault();
+            await notesService.createNote(newNote);
+            setNewNote({ title: '', color: '#f4f4f5' })
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const { isAuthenticated } = useAuth0();
+    const [isLoading, setIsLoading] = useState(true);
+    const [newNote, setNewNote] = useState({ title: '', color: '#f4f4f5' });
+    const notesList = useSelector(selectNotes);
+
+    useEffect(() => {
+        async function getAllNotes() {
+            try {
+                setIsLoading(true);
+                await notesService.getAllNotes();
+                setIsLoading(false);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // if (isAuthenticated) {
+        //     getAllNotes();
+        // }
+    }, [isAuthenticated])
+
+    let computedNotes = <></>;
 
     if (isLoading)
         computedNotes =
@@ -49,11 +85,11 @@ export const NoteOffCanvas = ({ isOffcanvasVisible,
                 <ul className='text-3xl flex-1'>
                     {computedNotes}
                 </ul>
-                <form onSubmit={submitNewNote} className='w-full'>
+                <form onSubmit={createNote} className='w-full'>
                     <div className='flex items-center h-8'>
-                        <input value={newNoteTitle} onChange={handleEditNewNoteTitle} minLength={3} maxLength={15} className='rounded-md bg-slate-400 p-3 flex-1 h-full' type="text" />
-                        <input value={newNoteColor} onChange={(event) => setNewNoteColor(event.target.value)} className='rounded-md h-full mx-2' type="color" />
-                        <button className='rounded-md bg-green-800 h-full hover:bg-green-600 transition-all duration-200'><Icon path={mdiPlus} size={1.25} /></button>
+                        <input value={newNote.title} onChange={handleNewNoteTitle} required minLength={3} maxLength={15} className='rounded-md bg-slate-400 p-3 flex-1 h-full' type="text" />
+                        <input value={newNote.color} onChange={handleNewNoteColor} className='rounded-md h-full mx-2' type="color" />
+                        <button type="submit" className='rounded-md bg-green-800 h-full hover:bg-green-600 transition-all duration-200'><Icon path={mdiPlus} size={1.25} /></button>
                     </div>
                 </form>
             </div>
