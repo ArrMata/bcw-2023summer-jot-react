@@ -12,7 +12,10 @@ export const notesSlice = createSlice({
 		},
 		addNote: (state, action) => {
 			state.notes.push(action.payload);
-		}
+		},
+		removeNote: (state, action) => {
+			state.notes = state.notes.filter(note => note.id !== action.payload.id);
+		},
 	}
 });
 
