@@ -10,6 +10,9 @@ export const notesSlice = createSlice({
 		populateAccountNotes: (state, action) => {
 			state.notes = action.payload;
 		},
+		addNote: (state, action) => {
+			state.notes.push(action.payload);
+		}
 	}
 });
 
